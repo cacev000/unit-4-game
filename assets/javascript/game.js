@@ -1,90 +1,127 @@
-$(document).ready(function () {
+var assignedHero = [];
+var assignedEnemy = [];
+var unassignedHeroes = [];
 
-    var bb8 = {
-        name: 'BB-8',
-        img: './assets/images/bb-8.png',
-        hp: 100,
-        baseAttack: 5,
-        attack: 5,
-        counterAttack: 10
-    };
+$(document).ready(function() {
+
     var bobaFett = {
+        id: 'boba_fett',
         name: 'Boba Fett',
         img: './assets/images/boba-fett.png',
-        hp: 120,
-        baseAttack: 7,
-        attack: 7,
-        counterAttack: 12
+        hp: Math.floor(Math.random() * 61) + 100,
+        baseAttack: Math.floor(Math.random() * 6) + 5,
+        attack: 0,
+        counterAttack: Math.floor(Math.random() * 16) + 10
     };
     var chewbacca = {
+        id: 'chewbacca',
         name: 'Chewbacca',
         img: './assets/images/chewbacca.png',
-        hp: 120,
-        baseAttack: 7,
-        attack: 7,
-        counterAttack: 12
+        hp: Math.floor(Math.random() * 61) + 100,
+        baseAttack: Math.floor(Math.random() * 6) + 5,
+        attack: 0,
+        counterAttack: Math.floor(Math.random() * 16) + 10
     };
     var vader = {
+        id: 'darth_vader',
         name: 'Darth Vader',
         img: './assets/images/darth-vader.png',
-        hp: 140,
-        baseAttack: 10,
-        attack: 10,
-        counterAttack: 20
+        hp: Math.floor(Math.random() * 61) + 100,
+        baseAttack: Math.floor(Math.random() * 6) + 5,
+        attack: 0,
+        counterAttack: Math.floor(Math.random() * 16) + 10
     };
     var darthMaul = {
+        id: 'darth_maul',
         name: 'Darth Maul',
         img: './assets/images/darth-maul.png',
-        hp: 160,
-        baseAttack: 14,
-        attack: 14,
-        counterAttack: 25
+        hp: Math.floor(Math.random() * 61) + 100,
+        baseAttack: Math.floor(Math.random() * 6) + 5,
+        attack: 0,
+        counterAttack: Math.floor(Math.random() * 16) + 10
     };
     var hanSolo = {
+        id: 'han_solo',
         name: 'Han Solo',
         img: './assets/images/han-solo.png',
-        hp: 160,
-        baseAttack: 14,
-        attack: 14,
-        counterAttack: 30
+        hp: Math.floor(Math.random() * 61) + 100,
+        baseAttack: Math.floor(Math.random() * 6) + 5,
+        attack: 0,
+        counterAttack: Math.floor(Math.random() * 16) + 10
     };
 
-    var arrChar = [bb8, bobaFett, chewbacca, vader, darthMaul, hanSolo];
+    unassignedHeroes = [bobaFett, chewbacca, vader, darthMaul, hanSolo];
 
-    arrChar.forEach(
-        function (character) {
+    unassignedHeroes.forEach(function(character) {
         var charactersElement = $('#characters');
-        charactersElement.addClass('row');
-    
+        charactersElement.addClass('row justify-content-between');
+        charactersElement.css('margin-bottom', '20px');
+
         var cardElement = $('<div>');
         cardElement.addClass('card col-xs-2');
-        cardElement.css('width','10rem');
-        cardElement.css('margin-right','5px');
-        cardElement.css('margin-bottom','5px');
-    
+        cardElement.css('width', '13rem');
+        cardElement.attr('onclick', 'assignRole(' + JSON.stringify(character) + ')');
+        cardElement.attr('id', character.id);
+
         var imgElement = $('<img>');
         imgElement.addClass('card-img-top');
         imgElement.attr('src', character.img);
-    
+
         var cardBody = $('<div>');
-        cardBody.addClass('card-body');
-        cardBody.css('background-color', 'white');
+        cardBody.css('background-color', 'rgba(0, 0, 0, 0.31)');
         cardBody.css('text-align', 'center');
-    
+        cardBody.css('position', 'absolute');
+        cardBody.css('bottom', '0');
+        cardBody.css('width', '100%');
+
         var cardTitle = $('<h6>');
-        cardTitle.addClass('card-title');
         cardTitle.text(character.name);
+        cardTitle.css('color', '#FFD700');
 
         var cardHp = $('<p>');
-            cardHp.text('HP: ' + character.hp);
-    
+        cardHp.text('HP: ' + character.hp);
+        cardHp.css('color', '#a6ffa6');
+
         cardBody.append(cardTitle);
         cardBody.append(cardHp);
-        
+
         cardElement.append(imgElement);
         cardElement.append(cardBody);
-    
+
         charactersElement.append(cardElement);
     });
 
+    $('#btnAttack').on('click', function() {
+
+        // assignedEnemy[0].baseAttack;
+        // assignedHero[0].baseAttack;
+    });
 });
+
+function assignRole(hero) {
+
+    // find index of unassignedhero to be removed from unassignedhero array
+    var indexFound = unassignedHeroes.findIndex(function(searchHero) {
+        return searchHero.name === hero.name;
+    });
+    // remove hero/enemy from unassigned heroes
+    unassignedHeroes.splice(indexFound, 1);
+
+    // assign hero to enemy or hero array
+    if (assignedEnemy.length === 0 && assignedHero.length !== 0) {
+        $('#' + hero.id).hide();
+        assignedEnemy.push(hero);
+
+        $('#enemyName').text(hero.name);
+        $('#enemyHp').text(hero.hp);
+        $('#enemyImg').attr('src', hero.img);
+    }
+    if (assignedEnemy.length === 0 && assignedHero.length === 0) {
+        $('#' + hero.id).hide();
+        assignedHero.push(hero);
+
+        $('#heroName').text(hero.name);
+        $('#heroHp').text(hero.hp);
+        $('#heroImg').attr('src', hero.img);
+    }
+}
