@@ -92,9 +92,28 @@ $(document).ready(function() {
     });
 
     $('#btnAttack').on('click', function() {
+        var heroData = assignedHero[0];
+        var enemyData = assignedEnemy[0];
 
-        // assignedEnemy[0].baseAttack;
-        // assignedHero[0].baseAttack;
+        if (heroData.attack === 0) {
+            heroData.attack = heroData.baseAttack;
+        }
+
+        // lower Enemy HP and increase attack
+        if ((enemyData.hp - heroData.attack) > 0) {
+            enemyData.hp = enemyData.hp - heroData.attack;
+            heroData.attack = heroData.attack + heroData.baseAttack;
+        } else {
+            assignedEnemy = [];
+            alert('You have defeated the enemy. Select the next enemy to fight');
+        }
+
+        // lower hero HP
+        if ((heroData.hp - enemyData.counterAttack) > 0) {
+            heroData.hp = heroData.hp - enemyData.counterAttack;
+        } else {
+            alert('You Hero has died. Good luck next time!!');
+        }
     });
 });
 
